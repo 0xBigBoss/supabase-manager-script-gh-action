@@ -1,0 +1,22 @@
+name: Supabase Manager Script
+author: 0xbigboss
+description: A GitHub Action to manage your Supabase account and projects via the Supabase Management API.
+branding:
+  color: green
+  icon: code
+inputs:
+  supabase-access-token:
+    description: The Supabase Access Token with experimental features enabled.
+    required: true
+  script:
+    description: The script to run.
+    required: true
+  result-encoding:
+    description: Either "string" or "json" (default "json")—how the result will be encoded
+    default: json
+outputs:
+  result:
+    description: The return value of the script, stringified with `JSON.stringify`
+runs:
+  using: node20
+  main: dist/index.js
