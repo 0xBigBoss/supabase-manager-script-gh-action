@@ -21,15 +21,41 @@ This action is a wrapper around the [Supabase Management API](https://supabase.c
 
 ## Usage
 
-All outputs except api_url and graphql_url will be masked in the GitHub Actions logs.
-
 Basic usage:
 
 ```yaml
-- uses: 0xbigboss/supabase-manager-script-gh-action@v1
-  id: supabase-script
+- name: Get Supabase Database Branch
+  uses: 0xbigboss/supabase-branch-gh-action@v1
+  id: supabase-branch
   with:
     supabase-access-token: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+    supabase-project-id: ${{ secrets.SUPABASE_PROJECT_ID }} # use the parent project id
+- name: Add SMS provider to Supabase branch
+  uses: 0xbigboss/supabase-manager-script-gh-action@v1
+  id: add-sms-provider
+  with:
+    supabase-access-token: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+    script: |
+      const parentAuthConfig = await supabaseManager.projectsConfig.getV1AuthConfig({
+        ref: process.env.SUPABASE_PARENT_PROJECT_ID,
+      });
+
+      await supabaseManager.projectsConfig.updateV1AuthConfig({
+        ref: process.env.SUPABASE_PROJECT_ID,
+        requestBody: {
+          external_phone_enabled: true,
+          sms_provider: parentAuthConfig.sms_provider,
+          sms_twilio_verify_account_sid:
+            parentAuthConfig.sms_twilio_verify_account_sid,
+          sms_twilio_verify_auth_token: parentAuthConfig.sms_twilio_verify_auth_token,
+          sms_twilio_verify_message_service_sid:
+            parentAuthConfig.sms_twilio_verify_message_service_sid,
+        },
+      });
+      return "success";
+  env:
+    SUPABASE_PROJECT_ID: ${{ steps.supabase-branch.outputs.project_ref }}
+    SUPABASE_PARENT_PROJECT_ID: ${{ steps.supabase-branch.outputs.parent_project_ref }}
 - name: Get result
   run: echo "${{steps.supabase-script.outputs.result}}"
 ```
