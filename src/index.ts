@@ -2,7 +2,6 @@ import { SupabaseManager } from "@0xbigboss/supabase-manager";
 import * as core from "@actions/core";
 import { context } from "@actions/github";
 import { callAsyncFunction } from "./async-function";
-import { wrapRequire } from "./wrap-require";
 
 process.on("unhandledRejection", handleError);
 main().catch(handleError);
@@ -28,8 +27,6 @@ async function main(): Promise<void> {
 	// Using property/value shorthand on `require` (e.g. `{require}`) causes compilation errors.
 	const result = await callAsyncFunction(
 		{
-			require: wrapRequire,
-			__original_require__: __non_webpack_require__,
 			supabaseManager,
 			context,
 			core,

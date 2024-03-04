@@ -9,12 +9,6 @@ To use this action, provide an input named script that contains the body of an a
 - `context` An object containing the [context of the workflow
   run](https://github.com/actions/toolkit/blob/main/packages/github/src/context.ts)
 - `core` A reference to the [@actions/core](https://github.com/actions/toolkit/tree/main/packages/core) package
-- `require` A proxy wrapper around the normal Node.js `require` to enable
-  requiring relative paths (relative to the current working directory) and
-  requiring npm packages installed in the current working directory. If for
-  some reason you need the non-wrapped `require`, there is an escape hatch
-  available: `__original_require__` is the original value of `require` without
-  our wrapping applied.
 
 Since the `script` is just a function body, these values will already be
 defined, so you don't have to import them (see examples below).

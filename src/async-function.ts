@@ -8,8 +8,6 @@ export declare type AsyncFunctionArguments = {
 	core: typeof core;
 	supabaseManager: InstanceType<typeof SupabaseManager>;
 	context: Context;
-	require: NodeRequire;
-	__original_require__: NodeRequire;
 };
 
 export function callAsyncFunction<T>(

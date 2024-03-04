@@ -23285,27 +23285,6 @@ function callAsyncFunction(args, source) {
 }
 var AsyncFunction = Object.getPrototypeOf(async () => null).constructor;
 
-// src/wrap-require.ts
-import * as path from "path";
-var wrapRequire = new Proxy(__non_webpack_require__, {
-  apply: (target, thisArg, [moduleID]) => {
-    if (moduleID.startsWith(".")) {
-      moduleID = path.resolve(moduleID);
-      return target.apply(thisArg, [moduleID]);
-    }
-    const modulePath = target.resolve.apply(thisArg, [
-      moduleID,
-      {
-        paths: [process.cwd()]
-      }
-    ]);
-    return target.apply(thisArg, [modulePath]);
-  },
-  get: (target, prop, receiver) => {
-    Reflect.get(target, prop, receiver);
-  }
-});
-
 // src/index.ts
 async function main() {
   const sbToken = core.getInput("supabase-access-token", { required: true });
@@ -23320,8 +23299,6 @@ async function main() {
   });
   const script = core.getInput("script", { required: true });
   const result = await callAsyncFunction({
-    require: wrapRequire,
-    __original_require__: __non_webpack_require__,
     supabaseManager,
     context: github.context,
     core
