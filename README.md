@@ -41,7 +41,7 @@ output of a github-script step. For some workflows, string encoding is preferred
 `result-encoding` input:
 
 ```yaml
-- uses: 0xbigboss/supabase-manager-script-gh-action@0.0.0
+- uses: 0xbigboss/supabase-manager-script-gh-action@v1
   id: my-script
   with:
     result-encoding: string
